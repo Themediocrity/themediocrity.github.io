@@ -1,36 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>THEMEDIOCRITY</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Статус сервера THEMEDIOCRITY</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background: black;
-      color: lime;
-      font-family: monospace;
+      background: #121212;
+      color: #e0e0e0;
+      font-family: 'Roboto', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
       text-align: center;
-      padding-top: 20vh;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    }
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid #2c2c2c;
+      border-top: 6px solid #007bff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1.5rem;
+    }
+    .message {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      opacity: 0;
+      animation: fadeIn 1s 0.5s forwards;
+    }
+    .error {
+      color: #ff4c4c;
+    }
+    .info {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      opacity: 0;
+      animation: fadeIn 1s 1s forwards;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <h1>Проверка связи с сервером...</h1>
-  <script>
-    const server = "http://themediocrity.duckdns.org";
-    const timeout = 3000;
+  <div class="spinner"></div>
+  <h1>Проверка доступности сервера</h1>
+  <div class="message">Пожалуйста, подождите...</div>
 
-    fetch(server, { mode: "no-cors" })
-      .then(() => {
-        window.location.href = server;
-      })
-      .catch(() => {
-        document.body.innerHTML = "<h1>Сервер не отвечает.</h1><p>Да</p>";
-      });
+  <script>
+    const serverURL = "http://themediocrity.duckdns.org";
+    let redirected = false;
+
+    const img = new Image();
+    img.src = serverURL + "/favicon.ico?" + Date.now();
+
+    img.onload = () => {
+      redirected = true;
+      window.location.href = serverURL;
+    };
+    img.onerror = () => {
+      if (!redirected) showError();
+    };
 
     setTimeout(() => {
-      document.body.innerHTML = "<h1>Сервер не отвечает.</h1><p>Да</p>";
-    }, timeout);
+      if (!redirected) showError();
+    }, 4000);
+
+    function showError() {
+      document.body.innerHTML = `
+        <h1 class="error">Сервер временно недоступен</h1>
+        <div class="message">Приносим извинения, но соединение с сервером не удалось установить.</div>
+        <div class="info">Если проблема сохраняется, пожалуйста, свяжитесь с администратором: <a href="mailto:admin@themediocrity.org" style="color: #007bff; text-decoration: none;">admin@themediocrity.org</a></div>
+      `;
+    }
   </script>
 </body>
 </html>
