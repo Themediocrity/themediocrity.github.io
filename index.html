@@ -43,7 +43,7 @@
       color: #ff4c4c;
     }
     .info {
-      margin-top: 2rem;
+      margin-top: 1.5rem;
       font-size: 0.9rem;
       opacity: 0;
       animation: fadeIn 1s 1s forwards;
@@ -66,17 +66,20 @@
     const serverURL = "http://themediocrity.duckdns.org";
     let redirected = false;
 
-    const img = new Image();
-    img.src = serverURL + "/favicon.ico?" + Date.now();
-
-    img.onload = () => {
-      redirected = true;
-      window.location.href = serverURL;
+    // Invisible iframe to detect server availability
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = serverURL;
+    iframe.onload = () => {
+      if (!redirected) {
+        redirected = true;
+        window.location.href = serverURL;
+      }
     };
-    img.onerror = () => {
-      if (!redirected) showError();
-    };
+    iframe.onerror = () => showError();
+    document.body.appendChild(iframe);
 
+    // Fallback timeout
     setTimeout(() => {
       if (!redirected) showError();
     }, 4000);
@@ -84,8 +87,8 @@
     function showError() {
       document.body.innerHTML = `
         <h1 class="error">Сервер временно недоступен</h1>
-        <div class="message">Приносим извинения, но соединение с сервером не удалось установить.</div>
-        <div class="info">Если проблема сохраняется, пожалуйста, свяжитесь с администратором: <a href="mailto:admin@themediocrity.org" style="color: #007bff; text-decoration: none;">admin@themediocrity.org</a></div>
+        <div class="message">Мы не смогли установить соединение с сервером.</div>
+        <div class="info">Попробуйте обновить страницу или напишите в Telegram: <a href="https://t.me/themediocrity" style="color:#007bff; text-decoration:none;">@themediocrity</a></div>
       `;
     }
   </script>
