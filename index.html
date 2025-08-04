@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THEMEDIOCRITY</title>
+  <style>
+    body {
+      background: black;
+      color: lime;
+      font-family: monospace;
+      text-align: center;
+      padding-top: 20vh;
+    }
+  </style>
+</head>
+<body>
+  <h1>Проверка связи с сервером...</h1>
+  <script>
+    const server = "http://themediocrity.duckdns.org";
+    const timeout = 3000;
+
+    fetch(server, { mode: "no-cors" })
+      .then(() => {
+        window.location.href = server;
+      })
+      .catch(() => {
+        document.body.innerHTML = "<h1>Сервер не отвечает.</h1><p>Да</p>";
+      });
+
+    setTimeout(() => {
+      document.body.innerHTML = "<h1>Сервер не отвечает.</h1><p>Да</p>";
+    }, timeout);
+  </script>
+</body>
+</html>
